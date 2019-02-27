@@ -6,6 +6,14 @@ Converts a database of Magic: the Gathering cards from JSON to a normalized MySQ
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+### Get data file
+
+The json data can be downloaded from https://mtgjson.com
+
+https://mtgjson.com/json/AllSets.json
+
+Download a local copy to pass to your scripts
+
 ### Prerequisites
 
 The json file is pulled from https://mtgjson.com
