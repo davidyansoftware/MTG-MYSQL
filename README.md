@@ -10,7 +10,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 The json data can be downloaded from https://mtgjson.com
 
-https://mtgjson.com/json/AllSets.json
+```
+wget https://mtgjson.com/json/AllSets.json
+```
 
 Download a local copy to pass to your scripts
 
