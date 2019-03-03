@@ -60,10 +60,12 @@ my $sethash = decode_json($json);
 
 print "ADDING CARDS TO DATABASE\n";
 
-my $cardExists = $dbh->prepare("select exists(select * from names where name = ?)");
+my $cardExists = $dbh->prepare("select exists(select * from names join rules on names.rulesId = rules.id where name = ? and text = ?)");
 
 #TODO ignore tokens
-#my $insertSet = $dbh->prepare("insert into sets values (?, ?)"); #, ?, ?, ?, ?, ?, ?)");
+my $insertSet = $dbh->prepare("insert into sets (name, code, mtgoCode, block, releaseDate, type, baseSetSize, totalSetSize, isFoilOnly, isOnlineOnly) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+# extra tables are used when there are a variable number of those fields per card
 my $insertRules = $dbh->prepare("insert into rules (convertedManaCost, manaCost, text, power, toughness, loyalty) values (?, ?, ?, ?, ?, ?)");
 my $insertNames = $dbh->prepare("insert into names values (?, ?)");
 my $insertColors = $dbh->prepare("insert into colors values (?, ?)");
@@ -76,12 +78,25 @@ foreach my $set (keys %{$sethash}) {
 
     print "$set{name}\n";
 
+    $insertSet->execute(
+        $set{name},
+        $set{code},
+        $set{mtgoCode},
+        $set{block},
+        $set{releaseDate},
+        $set{type},
+        $set{baseSetSize},
+        $set{totalSetSize},
+        $set{isFoilOnly},
+        $set{isOnlineOnly},
+    ) or print "Cant's execute $set{name}\n";
+
     my $cardhash = $set{cards};
 
     foreach my $card (@{$cardhash}) {
         my %card = %{$card};
 
-        $cardExists->execute($card{name});
+        $cardExists->execute($card{name}, $card{text});
         my ($exists) = $cardExists->fetchrow_array();
         next if $exists;
 
@@ -92,7 +107,7 @@ foreach my $set (keys %{$sethash}) {
             $card{power},
             $card{toughness},
             $card{loyalty},
-        ) or print "Can't execute $card{name} $card{names}\n";
+        ) or print "Can't execute $card{name}\n";
 
         my $id = $insertRules->{'mysql_insertid'};        
 

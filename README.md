@@ -66,7 +66,7 @@ The schema gives as much flexibility as possible to searches. Here are some exam
 Find the colors of "Psychatog":
 
 ```
-mysql> select color from colors join names on colors.id = names.id where name = "Psychatog";
+mysql> select color from colors join names on colors.rulesId = names.rulesId where name = "Psychatog";
 +-------+
 | color |
 +-------+
@@ -78,7 +78,7 @@ mysql> select color from colors join names on colors.id = names.id where name = 
 Find the power/toughness of "Serra Angel":
 
 ```
-mysql> select power, toughness from rules join names on rules.id = names.id where name = "Serra Angel";
+mysql> select power, toughness from rules join names on rules.id = names.rulesId where name = "Serra Angel";
 +-------+-----------+
 | power | toughness |
 +-------+-----------+
@@ -89,7 +89,7 @@ mysql> select power, toughness from rules join names on rules.id = names.id wher
 Find 10 cards with CMC 3:
 
 ```
-mysql> select name from names join rules on names.id = rules.id where convertedManaCost = 3 limit 10;
+mysql> select name from names join rules on names.rulesId = rules.id where convertedManaCost = 3 limit 10;
 +--------------------+
 | name               |
 +--------------------+
