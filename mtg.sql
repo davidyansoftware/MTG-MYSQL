@@ -23,12 +23,16 @@ CREATE TABLE mtg.sets (
 );
 
 CREATE TABLE mtg.cards (
+    `id` INT NOT NULL AUTO_INCREMENT,
+
     `setId` INT NOT NULL REFERENCES mtg.sets(`id`),
     `number` VARCHAR(10),
     `rulesId` INT NOT NULL REFERENCES mtg.rules(`id`),
 
-    `flavorText` VARCHAR(100),
-    `artist` VARCHAR(100)
+    `flavorText` VARCHAR(1000),
+    `artist` VARCHAR(100),
+
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE mtg.rules (

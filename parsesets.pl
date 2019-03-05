@@ -99,6 +99,13 @@ foreach my $set (keys %{$sethash}) {
 
         my $rulesId = &insertRules($card);
 
+        $insertCard->execute(
+            $setId,
+            $card->{number},
+            $rulesId,
+            $card->{flavorText},
+            $card->{artist}
+        );
     }
 }
 $rulesExist->finish();
