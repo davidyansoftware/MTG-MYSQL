@@ -22,6 +22,15 @@ CREATE TABLE mtg.sets (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE mtg.cards (
+    `setId` INT NOT NULL REFERENCES mtg.sets(`id`),
+    `number` VARCHAR(10),
+    `rulesId` INT NOT NULL REFERENCES mtg.rules(`id`),
+
+    `flavorText` VARCHAR(100),
+    `artist` VARCHAR(100)
+);
+
 CREATE TABLE mtg.rules (
 
     /* TODO use max to determine limits of these varchars */
