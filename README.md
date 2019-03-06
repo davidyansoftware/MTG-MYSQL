@@ -106,6 +106,17 @@ mysql> select name from names join rules on names.rulesId = rules.id where conve
 +--------------------+
 ```
 
+Number of times Llanowar Elves has been reprinted:
+
+```
+mysql> select count(*) from cards join names on cards.rulesId = names.rulesId where name = "Llanowar Elves";
++----------+
+| count(*) |
++----------+
+|       41 |
++----------+
+```
+
 ## Schema
 
 This schema was designed to handle cards that have a variable number of entries per field. For example, some cards have a single color, some have many. By storing these in a separate table and referencing the card via id, I can denote any number of colors for a card, without depending on empty columns. This applies to name, color, type, subtype, and supertype. The name table is a special case where some cards have multiple names (split, double-faced). This allows you to query the database with any of the valid names to find the results.
