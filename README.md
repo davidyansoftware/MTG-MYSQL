@@ -121,4 +121,28 @@ mysql> select count(*) from cards join names on cards.rulesId = names.rulesId wh
 
 This schema was designed to handle cards that have a variable number of entries per field. For example, some cards have a single color, some have many. By storing these in a separate table and referencing the card via id, I can denote any number of colors for a card, without depending on empty columns. This applies to name, color, type, subtype, and supertype. The name table is a special case where some cards have multiple names (split, double-faced). This allows you to query the database with any of the valid names to find the results.
 
-The schema is normalized to remove redundancy. This assures that each piece of information has a single authoritative source, and isn't being duplicated at different points in the table. For example, cards are often printed multiple times through different sets. By keeping track of a set of rules via an id, we can reference the same set of rules (and associated names) even across different sets.
+### Tables
+
+Check mtg.sql to see up-to-date fields for the following tables.
+
+Cards - a sort of intersect table between sets and rules. This describes the physical printing of a card, including artist and rarity.
+
+Sets - describes the set a card can be released in, along with some release information
+
+Rules - describes rules information for a given card. Addtional, variable length information is stored in associated tables:
+
+Names - names of the cards. Maybe have multiples in case of split/doublefaced
+
+Colors - each color of the card, described by a char
+
+Types/Supertypes/Subtypes - a listing of each type associated with the card
+
+### Normalization
+
+The schema is normalized to remove redundancy and improve data integrety. This assures that each piece of information has a single authoritative source, and isn't being duplicated at different points in the table. For example, cards are often printed multiple times through different sets. By keeping track of a set of rules via an id, we can reference the same set of rules (and associated names) even across different sets.
+
+First Normal Form (1NF) - requires the values in each column of a table are atomic. This is achieved by creating additional tables to store variable length sets of information (ex: a card can have any number of subtypes, so subtypes is pulled into its own table with a many-to-one relationship with rules entries).
+
+Second Normal Form (2NF) - requires all non-key attributes be dependent on the whole key. This is seen in the seperation of rules and card printings. All rules information are dependant on the rulesId, and printed cards simply reference the rulesId.
+
+Third Normal Form (3NF) - requires that there are no transitive dependencies. This is different from 2NF in that each non-key attribute can ONLY depend on the candidate key.
