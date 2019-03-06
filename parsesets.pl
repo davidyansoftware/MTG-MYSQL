@@ -73,7 +73,7 @@ my $insertSupertype = $dbh->prepare("insert into supertypes values (?, ?)");
 my $insertType = $dbh->prepare("insert into types values (?, ?)");
 my $insertSubtype = $dbh->prepare("insert into subtypes values (?, ?)");
 
-my $insertCard = $dbh->prepare("insert into cards(setId, number, rulesId, flavorText, artist) values (?, ?, ?, ?, ?)");
+my $insertCard = $dbh->prepare("insert into cards(setId, number, rulesId, flavorText, artist, rarity) values (?, ?, ?, ?, ?, ?)");
 
 foreach my $set (keys %{$sethash}) {
     my %set = %{$sethash->{$set}};
@@ -104,7 +104,8 @@ foreach my $set (keys %{$sethash}) {
             $card->{number},
             $rulesId,
             $card->{flavorText},
-            $card->{artist}
+            $card->{artist},
+            $card->{rarity}
         );
     }
 }
@@ -125,10 +126,13 @@ sub insertRules {
 
     my %card = %{$card};    
 
+    # check if this set of rules exists
+    # checks text in addition to name to account for unstable cards
     $rulesExist->execute($card{name}, $card{text});
     my ($rulesId) = $rulesExist->fetchrow_array();
     return $rulesId if $rulesId;
 
+    # if rules don't exist, insert and return id
     $insertRules->execute(
         $card{convertedManaCost},
         $card{manaCost},
@@ -139,6 +143,7 @@ sub insertRules {
     ) or print "Can't execute $card{name}\n";
     my $id = $insertRules->{'mysql_insertid'};        
 
+    # use hash to remove redundant name already in name array
     my %names = ( $card{name} => 1 );
     foreach my $name (@{$card{names}}) {
         $names{$name} = 1;

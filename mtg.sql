@@ -31,6 +31,7 @@ CREATE TABLE mtg.cards (
 
     `flavorText` VARCHAR(1000),
     `artist` VARCHAR(100),
+    `rarity` VARCHAR(8),
 
     PRIMARY KEY (`id`)
 );
